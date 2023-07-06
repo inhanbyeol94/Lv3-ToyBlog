@@ -8,17 +8,19 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      this.belongsTo(models.Posts, {
+      this.hasMany(models.Post, {
         targetKey: 'userId',
-        foreignKey: 'userId',
+        foreignKey: 'UserId',
       });
-      this.belongsTo(models.Likes, {
+
+      this.hasMany(models.Like, {
         targetKey: 'userId',
-        foreignKey: 'userId',
+        foreignKey: 'UserId',
       });
-      this.belongsTo(models.Comments, {
+
+      this.hasMany(models.Comment, {
         targetKey: 'userId',
-        foreignKey: 'userId',
+        foreignKey: 'UserId',
       });
     }
   }
@@ -28,24 +30,30 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.BIGINT,
+        type: DataTypes.BIGINT,
       },
       id: {
-        type: Sequelize.STRING,
+        unique: true,
+        allowNull: false,
+        type: DataTypes.STRING,
       },
       nickname: {
-        type: Sequelize.STRING,
+        allowNull: false,
+        type: DataTypes.STRING,
       },
       password: {
-        type: Sequelize.STRING,
+        allowNull: false,
+        type: DataTypes.STRING,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
       },
     },
     {

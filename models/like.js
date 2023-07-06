@@ -8,13 +8,13 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      this.belongsTo(models.Posts, {
+      this.belongsTo(models.Post, {
         targetKey: 'postId',
-        foreignKey: 'postId',
+        foreignKey: 'PostId',
       });
-      this.belongsTo(models.Members, {
+      this.belongsTo(models.Member, {
         targetKey: 'userId',
-        foreignKey: 'userId',
+        foreignKey: 'UserId',
       });
     }
   }
@@ -24,21 +24,25 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.BIGINT,
+        type: DataTypes.BIGINT,
       },
       postId: {
-        type: Sequelize.BIGINT,
+        allowNull: false,
+        type: DataTypes.BIGINT,
       },
       userId: {
-        type: Sequelize.BIGINT,
+        allowNull: false,
+        type: DataTypes.BIGINT,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
       },
     },
     {

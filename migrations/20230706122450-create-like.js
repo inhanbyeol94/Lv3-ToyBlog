@@ -9,19 +9,33 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.BIGINT,
       },
-      postId: {
+      PostId: {
+        allowNull: false,
+        references: {
+          model: 'Posts',
+          key: 'postId',
+        },
+        onDelete: 'CASCADE',
         type: Sequelize.BIGINT,
       },
-      userId: {
+      UserId: {
+        allowNull: false,
+        references: {
+          model: 'Members',
+          key: 'userId',
+        },
+        onDelete: 'CASCADE',
         type: Sequelize.BIGINT,
       },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('now'),
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('now'),
       },
     });
   },
