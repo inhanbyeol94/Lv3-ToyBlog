@@ -1,0 +1,3 @@
+npx sequelize model:generate --name Member --attributes userId:bigint,id:string,nickname:string,password:string
+npx sequelize model:generate --name Post --attributes postId:bigint,userId:bigint,title:string,content:text
+npx sequelize model:generate --name Comment --attributes commentId:bigint,postId:bigint,userId:bigint,content:text
