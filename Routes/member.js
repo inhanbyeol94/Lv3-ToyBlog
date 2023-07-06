@@ -26,9 +26,8 @@ app.post('/signup', signUpValidation, async (req, res) => {
 
 app.post('/signin', signInValidation, async (req, res) => {
   try {
-    const { id, password } = req.body;
-
-    const payloadData = { userId: validationToUser.userId, nickname: validationToUser.nickname };
+    const { id, nickname } = req.userInfo;
+    const payloadData = { id, nickname };
     const token = await jwt.sign(payloadData, SESSION_SECRET_KEY);
 
     res.cookie('auth', `Bearer ${token}`);

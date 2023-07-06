@@ -1,7 +1,11 @@
+require('dotenv').config();
+
 const Joi = require('joi');
 const { user } = require('./message.json');
 const { Member } = require('../../models');
 const { Op } = require('sequelize');
+const crypto = require('crypto');
+const { SECRET_KEY } = process.env;
 
 const userValidation = {
   signUpValidation: async (req, res, next) => {
@@ -69,9 +73,11 @@ const userValidation = {
     } catch (err) {
       return res.status(412).json({ message: err.message });
     }
-
+    const passwordToCrypto = crypto.pbkdf2Sync(body.password, SECRET_KEY.toString('hex'), 11524, 64, 'sha512').toString('hex');
+    const signInUserValidation = await Member.findOne({ where: { id: body.id, password: passwordToCrypto } });
     try {
-      if (!(await Member.findOne({ where: { userId: id, password: passwordToCrypto } }))) return res.status(412).json({ message: '아이디와 패스워드가 일치하지 않습니다.' });
+      if (!signInUserValidation) return res.status(412).json({ message: '아이디와 패스워드가 일치하지 않습니다.' });
+      req.userInfo = signInUserValidation;
     } catch (err) {
       console.error(err);
       return res.status(400).json({ message: '오류가 발생하였습니다.' });
