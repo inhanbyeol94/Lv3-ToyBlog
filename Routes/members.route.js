@@ -6,17 +6,17 @@ const crypto = require('crypto');
 
 const express = require('express');
 const app = express.Router();
-const { signUpValidation, signInValidation } = require('../middlewares/Validations/usersValidation');
+const { signUpValidation, signInValidation } = require('../middlewares/Validations/membersValidation');
 
 const { Member } = require('../models');
 
-//all read
+/* 회원가입 */
 app.post('/signup', signUpValidation, async (req, res) => {
   try {
-    const { user_id, password, nickname } = req.body;
+    const { id, password, nickname } = req.body;
 
     const passwordToCrypto = crypto.pbkdf2Sync(password, SECRET_KEY.toString('hex'), 11524, 64, 'sha512').toString('hex');
-    await Member.create({ user_id, nickname, password: passwordToCrypto });
+    await Member.create({ user_id: id, nickname, password: passwordToCrypto });
 
     res.status(201).json({ message: '정상 등록되었습니다.' });
   } catch (err) {
@@ -25,11 +25,15 @@ app.post('/signup', signUpValidation, async (req, res) => {
   }
 });
 
-app.post('/signin', signInValidation, async (req, res) => {
+/* 로그인 */
+app.post('/login', signInValidation, async (req, res) => {
   try {
-    const { user_id, id, nickname } = req.userInfo;
-    const payloadData = { user_id, id, nickname };
-    const token = await jwt.sign(payloadData, SESSION_SECRET_KEY);
+    const { id, password } = req.body;
+
+    const passwordToCrypto = crypto.pbkdf2Sync(password, SECRET_KEY.toString('hex'), 11524, 64, 'sha512').toString('hex');
+    const payloadData = await Member.findOne({ where: { user_id: id, password: passwordToCrypto } });
+
+    const token = await jwt.sign({ id: payloadData.id, user_id: payloadData.user_id, nickname: payloadData.nickname }, SESSION_SECRET_KEY);
 
     res.cookie('auth', `Bearer ${token}`);
     return res.status(200).json({ message: '로그인 성공' });
