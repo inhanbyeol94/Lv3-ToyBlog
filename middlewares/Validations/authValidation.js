@@ -2,19 +2,20 @@ require('dotenv').config();
 
 const { SESSION_SECRET_KEY } = process.env;
 const jwt = require('jsonwebtoken');
-const { Members } = require('../models');
+const { Member } = require('../../models');
+const { user } = require('../../message.json');
 
 module.exports = async (req, res, next) => {
   const { auth } = req.cookies;
   const [authType, authToken] = (auth ?? '').split(' ');
 
-  if (authType !== 'Bearer' || !authToken) return res.status(403).json({ message: '로그인 후에 이용할 수 있는 기능입니다.' });
+  if (authType !== 'Bearer' || !authToken) return res.status(403).json({ message: user.signInValidation });
 
   try {
-    const { userId } = jwt.verify(authToken, SESSION_SECRET_KEY);
+    const { id } = jwt.verify(authToken, SESSION_SECRET_KEY);
 
-    const user = await Members.findOne({ attributes: ['userId', 'nickname'], where: { userId: userId } });
-    res.locals.user = user.dataValues;
+    const user = await Member.findOne({ attributes: ['user_id', 'id', 'nickname'], where: { id } });
+    res.locals.user = user;
 
     next();
   } catch (err) {
