@@ -13,9 +13,10 @@ const { Member } = require('../models');
 //all read
 app.post('/signup', signUpValidation, async (req, res) => {
   try {
-    const { id, password, nickname } = req.body;
+    const { user_id, password, nickname } = req.body;
+
     const passwordToCrypto = crypto.pbkdf2Sync(password, SECRET_KEY.toString('hex'), 11524, 64, 'sha512').toString('hex');
-    await Member.create({ id, nickname, password: passwordToCrypto });
+    await Member.create({ user_id, nickname, password: passwordToCrypto });
 
     res.status(201).json({ message: '정상 등록되었습니다.' });
   } catch (err) {
@@ -26,8 +27,8 @@ app.post('/signup', signUpValidation, async (req, res) => {
 
 app.post('/signin', signInValidation, async (req, res) => {
   try {
-    const { id, nickname } = req.userInfo;
-    const payloadData = { id, nickname };
+    const { user_id, id, nickname } = req.userInfo;
+    const payloadData = { user_id, id, nickname };
     const token = await jwt.sign(payloadData, SESSION_SECRET_KEY);
 
     res.cookie('auth', `Bearer ${token}`);
