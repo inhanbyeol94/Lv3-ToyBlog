@@ -2,16 +2,16 @@ require('dotenv').config();
 const { DEVURL, PORT } = process.env;
 const express = require('express');
 const cookieParser = require('cookie-parser');
+const fs = require('fs');
 const app = express();
 
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(cookieParser());
 
-app.use('/', require('./Routes/index'));
-app.use('/post', require('./Routes/post'));
-app.use('/comment', require('./Routes/comment'));
-app.use('/member', require('./Routes/member'));
+fs.readdirSync('./Routes').forEach((Route) => {
+  app.use('/', require(`./Routes/${Route}`));
+});
 
 app.listen(PORT, (err) => {
   if (err) return console.log(err);
