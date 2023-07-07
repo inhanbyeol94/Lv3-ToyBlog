@@ -15,9 +15,13 @@ app.put('/posts/:postId/like', authValidation, likeValidation, async (req, res) 
 
     if (!switchLike) {
       await Like.create({ post_id: postId, user_id: id });
+      await Post.update({ like: (await Post.findOne({ where: { post_id: postId }, attributes: ['like'] })).like + 1 }, { where: { post_id: postId } });
+
       return res.json({ message: '좋아요를 등록하였습니다.' });
     } else {
       await Like.destroy({ where: { post_id: postId, user_id: id } });
+      await Post.update({ like: (await Post.findOne({ where: { post_id: postId }, attributes: ['like'] })).like - 1 }, { where: { post_id: postId } });
+
       return res.json({ message: '좋아요를 취소하였습니다.' });
     }
   } catch (err) {
@@ -30,12 +34,12 @@ app.put('/posts/:postId/like', authValidation, likeValidation, async (req, res) 
 app.get('/like/posts', authValidation, async (req, res) => {
   try {
     const { id } = res.locals.user;
+    console.log(id);
     res.status(200).json({
       posts: await Like.findAll({
+        attributes: [],
         where: { user_id: id },
         include: [{ model: Post, attributes: { exclude: ['user_id'] }, include: [{ model: Member, attributes: { exclude: ['password', 'created_at', 'updated_at', 'user_id'] } }] }],
-        attributes: [[sequelize.fn('COUNT', sequelize.col('Like.post_id')), 'likesCount']],
-        group: ['Like.post_id'],
         raw: true,
       }),
     });
