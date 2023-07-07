@@ -6,18 +6,18 @@ const { sequelize } = require('../models');
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Posts', {
-      postId: {
+      post_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.BIGINT,
       },
-      UserId: {
+      user_id: {
         allowNull: false,
         type: Sequelize.BIGINT,
         references: {
           model: 'Members',
-          key: 'userId',
+          key: 'id',
         },
         onDelete: 'CASCADE',
       },
@@ -29,12 +29,12 @@ module.exports = {
         allowNull: false,
         type: Sequelize.TEXT,
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn('now'),
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn('now'),

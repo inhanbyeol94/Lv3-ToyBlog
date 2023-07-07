@@ -3,26 +3,26 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Comments', {
-      commentId: {
+      comment_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.BIGINT,
       },
-      PostId: {
+      post_id: {
         allowNull: false,
         references: {
           model: 'Posts',
-          key: 'postId',
+          key: 'post_id',
         },
         onDelete: 'CASCADE',
         type: Sequelize.BIGINT,
       },
-      UserId: {
+      user_id: {
         allowNull: false,
         references: {
           model: 'Members',
-          key: 'userId',
+          key: 'id',
         },
         onDelete: 'CASCADE',
         type: Sequelize.BIGINT,
@@ -31,12 +31,12 @@ module.exports = {
         allowNull: false,
         type: Sequelize.TEXT,
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn('now'),
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn('now'),

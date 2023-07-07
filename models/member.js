@@ -9,30 +9,30 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       this.hasMany(models.Post, {
-        targetKey: 'userId',
-        foreignKey: 'UserId',
+        targetKey: 'id',
+        foreignKey: 'user_id',
       });
 
       this.hasMany(models.Like, {
-        targetKey: 'userId',
-        foreignKey: 'UserId',
+        targetKey: 'id',
+        foreignKey: 'user_id',
       });
 
       this.hasMany(models.Comment, {
-        targetKey: 'userId',
-        foreignKey: 'UserId',
+        targetKey: 'id',
+        foreignKey: 'user_id',
       });
     }
   }
   Member.init(
     {
-      userId: {
+      id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: DataTypes.BIGINT,
       },
-      id: {
+      user_id: {
         unique: true,
         allowNull: false,
         type: DataTypes.STRING,
@@ -45,18 +45,19 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.STRING,
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
       },
     },
     {
+      timestamps: false,
       sequelize,
       modelName: 'Member',
     }

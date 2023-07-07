@@ -9,28 +9,28 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       this.belongsTo(models.Post, {
-        targetKey: 'postId',
-        foreignKey: 'PostId',
+        targetKey: 'post_id',
+        foreignKey: 'post_id',
       });
       this.belongsTo(models.Member, {
-        targetKey: 'userId',
-        foreignKey: 'UserId',
+        targetKey: 'id',
+        foreignKey: 'user_id',
       });
     }
   }
   Comment.init(
     {
-      commentId: {
+      comment_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: DataTypes.BIGINT,
       },
-      postId: {
+      post_id: {
         allowNull: false,
         type: DataTypes.BIGINT,
       },
-      userId: {
+      user_id: {
         allowNull: false,
         type: DataTypes.BIGINT,
       },
@@ -38,18 +38,19 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.TEXT,
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
       },
     },
     {
+      timestamps: false,
       sequelize,
       modelName: 'Comment',
     }
